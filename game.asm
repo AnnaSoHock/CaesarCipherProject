@@ -30,6 +30,9 @@
 	guessed_shift: .asciiz "\n\nPlease guess the shift value: "
 	decrypted_sentence: .asciiz "\nThis is the decrypted sentence: "
 	iteration_counter: .asciiz "This is try number: "
+	
+	debugrandom_message: .asciiz "\nThis is the random number generated: "
+	debugshiftinput_message: .asciiz "\nThis is the shift input the user just entered: "
 .text
 .globl game_prompt
 	
@@ -157,28 +160,51 @@ guessing_game:
 	syscall
 	# Lower bound
 	add $a0, $a0, 1
-	move $s2, $a0
 	
+	move $s2, $a0 # this is the random generated number stored in $s2 
+	#
 	# calling encryption function
 	jal encryption_prompt
 	
 	li $t9, 0	# i = 0. i represents how many times you tried to guess the shift value
 	
+	#debugging print statements; to print out the number that the random number generated
+
+	#la $a0, debugrandom_message 	#load address of output_message into $a0
+	#li $v0, 4 		#4 is the code to print strings
+	#syscall
+	
+	#li $v0, 1
+	#move $a0, $s2
+	#syscall
+	
+	
+	
 	# for_loop branch used to facilitate the amount of guesses the user gets
 	for_loop:
 	beq $t9, 3, exit_status
+	
 	
 	#print shift value input
 	la $a0, guessed_shift
 	li $v0, 4
 	syscall
-	#user input
+	#user input read
 	li $v0, 5
-	move $s3, $v0
 	syscall
+	move $s4, $v0
+	
+	#debug statement to output the value the user input as shift value and see if it correctly stores into the register
+	#la $a0, debugshiftinput_message 	#load address of output_message into $a0
+	#li $v0, 4 		#4 is the code to print strings
+	#syscall
+	
+	#li $v0, 1
+	#move $a0, $s4
+	#syscall
 	
 	# if $s3 == shift value, go display you win
-	beq $s2, $s3, winner
+	beq $s2, $s4, winner
 	
 	# increment i
 	addi $t9, $t9, 1
