@@ -19,7 +19,7 @@ decrypt:
 	
 	#decrement character (ASCII) by one. We can reverse the encryption back to the original plaintext
 	#addi $t1, $t1, -1
-	sub $t1, $t1, $s3# decrement ASCII by the shift value
+	sub $t1, $t1, $s2 # decrement ASCII by the shift value
 	
 	#store the character in decrypted_text
 	sb $t1, 0($s1)

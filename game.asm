@@ -229,6 +229,7 @@ winner:
 	#print decrypted sentence
 	la $a0, decrypted_sentence
 	li $v0, 4
+	
 	jal decryption_prompt
 	
 	j exit
