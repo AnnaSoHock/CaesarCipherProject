@@ -1,11 +1,11 @@
-# Author: Marc Cruz
+# Author: Marc Cruz, Anna Hock, John Dang
 # Encryption Game
 
 .data
-	game_menu_prompt: .asciiz "For the game, would be guessing the right shift to decrypt the message!\nplease choose to:\n1. Select from a list\n2. Feeling lucky (random)\nEnter [1/2]: "
+	game_menu_prompt: .asciiz "\nFor this Casesar Cipher game, you will be guessing the right shift key value to decrypt the message!\nplease choose:\n1. Select a sentence to be encrypted from a list\n2. If you feel lucky, go for a randomly encrypted sentence!\nEnter [1/2]: "
 	invalid_prompt: .asciiz "Please enter a valid prompt\n"
 	#put list together to make it easier to print
-	game_list: .asciiz "Please select one of the given messages to try to decrypt!\nAfter selection, the chosen message is randomly encrypted\n1. Life is an adventure\n2. Keep it simple\n3. Learn and grow\n4. Explore new horizons\n5. Dance in the rain\n6. Bees know faces\n7. Besto Friendo\n8. Honey never spoils\n9. Bananas are berries\n10. Owls form parliaments\nEnter [1/2/3/4/5/6/7/8/9/10]\n"
+	game_list: .asciiz "Please select one of the given messages to try to decrypt!\nAfter selection, the chosen message is randomly encrypted\n1. Life is an adventure\n2. Keep it simple\n3. Learn and grow\n4. Explore new horizons\n5. Dance in the rain\n6. Bees know faces\n7. Besto Friendo\n8. Honey never spoils\n9. Bananas are berries\n10. Owls form parliaments\nEnter [1/2/3/4/5/6/7/8/9/10]:"
 
 	
 	# data
@@ -25,9 +25,11 @@
 
 	chosen_msg: .space 20
 		
-	lose_status: .asciiz "\nYou lose"
+	lose_status: .asciiz "\nYou lose."
 	win_status: .asciiz "\nYou win!"
-	guessed_shift: .asciiz "\nPlease guess  the shift value: "
+	guessed_shift: .asciiz "\n\nPlease guess the shift value: "
+	decrypted_sentence: .asciiz "\nThis is the decrypted sentence: "
+	iteration_counter: .asciiz "This is try number: "
 .text
 .globl game_prompt
 	
@@ -166,18 +168,30 @@ guessing_game:
 	for_loop:
 	beq $t9, 3, exit_status
 	
+	#print shift value input
 	la $a0, guessed_shift
 	li $v0, 4
 	syscall
-	
+	#user input
 	li $v0, 5
 	move $s3, $v0
 	syscall
 	
 	# if $s3 == shift value, go display you win
 	beq $s2, $s3, winner
-		
+	
+	# increment i
 	addi $t9, $t9, 1
+	
+	 # Print the current iteration (counter variable i)
+    la $a0, iteration_counter
+    li $v0, 4
+    syscall
+
+    li $v0, 1          # syscall code for printing an integer
+    move $a0, $t9       # load the value of the counter variable i
+    syscall
+
 	j for_loop
 	
 
@@ -185,6 +199,12 @@ winner:
 	la $a0, win_status
 	li $v0, 4
 	syscall	
+	
+	#print decrypted sentence
+	la $a0, decrypted_sentence
+	li $v0, 4
+	jal decryption_prompt
+	
 	j exit
 
 exit_status:

@@ -4,8 +4,8 @@
 
 .data
 	# main_menu .data
-	instructions: .asciiz "Why Hello! This is the menu for the caesar cipher scripts! \nMay choose to encrypt a message, decrypt an encrypted message, or select the Encryption Game! \nKeep in mind the limitation to messages are 20 characters"
-	main_menu_options:.asciiz "\nPlease choose one of the options:\n1. Encrypt a message\n2. Decrypt a message\n3. Encryption Game\n4. Exit\n"
+	instructions: .asciiz "Why Hello! This is the menu for the caesar cipher scripts! \nYou may choose to encrypt a message, decrypt an encrypted message, or select the Caesar Cipher Game! \nKeep in mind the limitation to messages are 20 characters"
+	main_menu_options:.asciiz "\n\nPlease choose one of the options:\n1. Encrypt a message\n2. Decrypt a message\n3. Caesar Cipher Game\n4. Exit\n"
 	main_menu_prompt: .asciiz "Enter [1/2/3/4]: "
 	main_menu_error_msg: .asciiz "Error: Invalid input. Please enter [1/2/3/4]\n"
 	
