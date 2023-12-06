@@ -1,12 +1,12 @@
-# Author: Marc Cruz, Anna Hock, John Dang
+# Author: Marc Cruz, John Dang, Anna Hock
 # Encryption Game
 
 .data
 	game_menu_prompt: .asciiz "\nFor this Casesar Cipher game, you will be guessing the right shift key value to decrypt the message!\nplease choose:\n1. Select a sentence to be encrypted from a list\n2. If you feel lucky, go for a randomly encrypted sentence!\nEnter [1/2]: "
 	invalid_prompt: .asciiz "Please enter a valid prompt\n"
+	
 	#put list together to make it easier to print
-	game_list: .asciiz "Please select one of the given messages to try to decrypt!\nAfter selection, the chosen message is randomly encrypted\n1. Life is an adventure\n2. Keep it simple\n3. Learn and grow\n4. Explore new horizons\n5. Dance in the rain\n6. Bees know faces\n7. Besto Friendo\n8. Honey never spoils\n9. Bananas are berries\n10. Owls form parliaments\nEnter [1/2/3/4/5/6/7/8/9/10]:"
-
+	game_list: .asciiz "Please select one of the given messages to try to decrypt!\nAfter your selection, the chosen message is randomly encrypted\n1. Life is an adventure\n2. Keep it simple\n3. Learn and grow\n4. Explore new horizons\n5. Dance in the rain\n6. Bees know faces\n7. Besto Friendo\n8. Honey never spoils\n9. Bananas are berries\n10. Owls form parliaments\nEnter [1/2/3/4/5/6/7/8/9/10]: "
 	
 	# data
 	random_number: .word 0
@@ -25,14 +25,16 @@
 
 	chosen_msg: .space 20
 		
-	lose_status: .asciiz "\nYou lose."
+	lose_status: .asciiz "\nYou lose"
 	win_status: .asciiz "\nYou win!"
 	guessed_shift: .asciiz "\n\nPlease guess the shift value: "
+	
 	decrypted_sentence: .asciiz "\nThis is the decrypted sentence: "
 	iteration_counter: .asciiz "This is try number: "
 	
-	debugrandom_message: .asciiz "\nThis is the random number generated: "
-	debugshiftinput_message: .asciiz "\nThis is the shift input the user just entered: "
+	#commented out, but used for debugging process
+	#debugrandom_message: .asciiz "\nThis is the random number generated: "
+	#debugshiftinput_message: .asciiz "\nThis is the shift input the user just entered: "
 .text
 .globl game_prompt
 	
@@ -66,6 +68,7 @@ print_list:
 	la $a0, game_list
 	li $v0, 4
 	syscall
+	
 	# prompt user input to choose a message
 	li $v0, 5
 	syscall
@@ -73,8 +76,7 @@ print_list:
 	
 	bgt $t0, 10, invalid_input
 	blt $t0, 1, invalid_input
-	
-	syscall
+
 	# not sure what a proper branch name is, but jumping to branch to get the desired message and encrypt it
 	j loading_message
 
@@ -162,7 +164,7 @@ guessing_game:
 	add $a0, $a0, 1
 	
 	move $s2, $a0 # this is the random generated number stored in $s2 
-	#
+	
 	# calling encryption function
 	jal encryption_prompt
 	
@@ -179,16 +181,15 @@ guessing_game:
 	#syscall
 	
 	
-	
 	# for_loop branch used to facilitate the amount of guesses the user gets
 	for_loop:
 	beq $t9, 3, exit_status
-	
 	
 	#print shift value input
 	la $a0, guessed_shift
 	li $v0, 4
 	syscall
+	
 	#user input read
 	li $v0, 5
 	syscall
@@ -203,21 +204,20 @@ guessing_game:
 	#move $a0, $s4
 	#syscall
 	
-	# if $s3 == shift value, go display you win
+	# if $s4 == shift value, go display you win
 	beq $s2, $s4, winner
+		
+	addi $t9, $t9, 1 # increment i
 	
-	# increment i
-	addi $t9, $t9, 1
+	# Print the current iteration (counter variable i)
+    	la $a0, iteration_counter
+    	li $v0, 4
+    	syscall
+
+    	li $v0, 1          # syscall code for printing an integer
+   	move $a0, $t9       # load the value of the counter variable i
+    	syscall
 	
-	 # Print the current iteration (counter variable i)
-    la $a0, iteration_counter
-    li $v0, 4
-    syscall
-
-    li $v0, 1          # syscall code for printing an integer
-    move $a0, $t9       # load the value of the counter variable i
-    syscall
-
 	j for_loop
 	
 
