@@ -1,12 +1,13 @@
-# Author: Thu Nguyen, John Dang, Anna Hock
+# Author: Thu Nguyen, Marc Cruz, John Dang, Anna Hock, Jason Yam
 # Decryption File
 
 .data
 	decrypted_message: .asciiz "\nDecrypted Message:  "
-	decrypted_text: .space 20
+	decrypted_text: .space 30
 
 .text
 .globl decryption_prompt
+
 decryption_prompt:
 	la $s1, decrypted_text
 decrypt:
@@ -19,7 +20,7 @@ decrypt:
 	
 	#decrement character (ASCII) by one. We can reverse the encryption back to the original plaintext
 	#addi $t1, $t1, -1
-	sub $t1, $t1, $s3# decrement ASCII by the shift value
+	sub $t1, $t1,  $s2 #$s3# decrement ASCII by the shift value
 	
 	#store the character in decrypted_text
 	sb $t1, 0($s1)

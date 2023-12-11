@@ -1,13 +1,13 @@
-# Author: Thu Nguyen, Marc Cruz
+# Author: Thu Nguyen, Marc Cruz, John Dang, Anna Hock, Jason Yam
 # Date 11/05/2023
 # Main Menu, users would start this file and be used to navigate to the other modules (encryption, decryption, and encryption game)
 
 .data
 	# main_menu .data
-	instructions: .asciiz "Why Hello! This is the menu for the caesar cipher scripts! \nMay choose to encrypt a message, decrypt an encrypted message, or select the Encryption Game! \nKeep in mind the limitation to messages are 20 characters"
-	main_menu_options:.asciiz "\nPlease choose one of the options:\n1. Encrypt a message\n2. Decrypt a message\n3. Encryption Game\n4. Exit\n"
+	instructions: .asciiz "Why Hello! This is the menu for the caesar cipher scripts! \nYou may choose to encrypt a message, decrypt an encrypted message, or select the Caesar Cipher Game! \nKeep in mind the limitation to messages are 20 characters"
+	main_menu_options:.asciiz "\n\nPlease choose one of the options:\n1. Encrypt a message\n2. Decrypt a message\n3. Caesar Cipher Game\n4. Exit\n"
 	main_menu_prompt: .asciiz "Enter [1/2/3/4]: "
-	main_menu_error_msg: .asciiz "Error: Invalid input. Please enter [1/2/3/4]\n"
+	main_menu_error_msg: .asciiz "Error: Invalid input. Please enter [1/2/3/4]: \n"
 	
 	# encryption.asm .data
 	# Within main_menu.asm to allow encryption.asm to be pure encryption with being given required variables instead of asking for variables
@@ -26,7 +26,6 @@
 	shift_value: .space 4
 	
 	
-
 .text
 .globl main_menu #initializing the branch to be accessed by other files
 
@@ -34,11 +33,13 @@
 	la $a0, instructions
 	li $v0, 4
 	syscall
+	
 main_menu:
 	# Printing out options for the user to select from
 	la $a0, main_menu_options
 	li $v0, 4
 	syscall
+	
     	# Prompt the user to enter option 1, 2, 3, or 4
    	la $a0, main_menu_prompt
    	li $v0, 4

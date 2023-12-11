@@ -1,9 +1,9 @@
-# Author: Jason Yam
+# Author: Thu Nguyen, Marc Cruz, John Dang, Anna Hock, Jason Yam
 # Encryption File
 
 .data
-	encrypted_text: .space 20
-	output_message: .asciiz "Encrypted message: "
+	encrypted_text: .space 30
+	display_encrypted: .asciiz "Encrypted message: "
 
 .text
 .globl encryption_prompt
@@ -36,8 +36,8 @@ encryption:
 display_output_encrypted:
 	
 	#Prompt output for encrypted message
-	la $a0, output_message 	#load address of output_message into $a0
-	li $v0, 4 		#4 is the code to print strings
+	la $a0, display_encrypted	#load address of encrypted_text into $a0
+	li $v0, 4			#4 is the code to print string
 	syscall
 	
 	#Display the encrypted message
